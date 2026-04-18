@@ -10,7 +10,7 @@ make_node:
     sw ra, 12(sp)
     sw a0, 8(sp)
 
-    24
+    li a0, 24
     call malloc
 
     lw t0, 8(sp)
