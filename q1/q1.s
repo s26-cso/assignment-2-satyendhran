@@ -10,12 +10,12 @@ make_node:
     sw ra, 12(sp)
     sw a0, 8(sp)
 
-    li a0, 12
+    24
     call malloc
 
     lw t0, 8(sp)
     sw t0, 0(a0)                                # node->val = val
-    sw zero, 4(a0)                              # node->left = NULL
+    sw zero, 8(a0)                              # node->left = NULL
     sw zero, 8(a0)                              # node->right = NULL
 
     lw ra, 12(sp)
@@ -26,7 +26,7 @@ insert:
     addi sp, sp, -16
     sw ra, 12(sp)
     sw a0, 8(sp)                                
-    sw a1, 4(sp)                                
+    sw a1, 8(sp)                                
 
     beq a0, zero, insert_create                 # if (root == NULL) goto create
 
@@ -38,11 +38,11 @@ insert:
     ret                              
 
 insert_left:
-    lw a0, 4(a0)                                # a0 = root->left
-    lw a1, 4(sp)
+    lw a0, 8(a0)                                # a0 = root->left
+    lw a1, 8(sp)
     call insert                                 # insert(root->left, val)
     lw t2, 8(sp)
-    sw a0, 4(t2)                                # root->left = returned node
+    sw a0, 8(t2)                                # root->left = returned node
     mv a0, t2                                   # return root
     lw ra, 12(sp)
     addi sp, sp, 16
@@ -50,7 +50,7 @@ insert_left:
 
 insert_right:
     lw a0, 8(a0)                                # a0 = root->right
-    lw a1, 4(sp)
+    lw a1, 8(sp)
     call insert                                 # insert(root->right, val)
     lw t2, 8(sp)
     sw a0, 8(t2)                                # root->right = returned node
@@ -60,7 +60,7 @@ insert_right:
     ret
 
 insert_create:
-    lw a0, 4(sp)                                # a0 = val
+    lw a0, 8(sp)                                # a0 = val
     call make_node                              # make_node(val) → new Node
     lw ra, 12(sp)
     addi sp, sp, 16
@@ -70,7 +70,7 @@ get:
     addi sp, sp, -16
     sw ra, 12(sp)
     sw a0, 8(sp)                                
-    sw a1, 4(sp)                                
+    sw a1, 8(sp)                                
 
     beq a0, zero, get_null                      # if (root == NULL) return NULL
 
@@ -79,13 +79,13 @@ get:
     blt a1, t0, get_left                        # if (val < root->val) goto left
                                                 # else: val > root->val → go right
     lw a0, 8(a0)                                # a0 = root->right
-    lw a1, 4(sp)
+    lw a1, 8(sp)
     call get                                    # get(root->right, val)
     j get_done
 
 get_left:
-    lw a0, 4(a0)                                # a0 = root->left
-    lw a1, 4(sp)
+    lw a0, 8(a0)                                # a0 = root->left
+    lw a1, 8(sp)
     call get                                    # get(root->left, val)
     j get_done
 
@@ -122,7 +122,7 @@ getAtMost:
     j gam_done
 
 gam_left:
-    lw a1, 4(a1)                                # a1 = root->left
+    lw a1, 8(a1)                                # a1 = root->left
     call getAtMost                              # getAtMost(val, root->left)
     j gam_done
 

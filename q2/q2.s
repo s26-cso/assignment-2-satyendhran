@@ -1,7 +1,8 @@
 .global main
 .section .data
-intstr:  .string "%d "
-newline: .string "\n"
+intstr:   .string "%d"
+sepstr:   .string " "
+newline:  .string "\n"
 
 .section .text
 main:
@@ -97,14 +98,17 @@ nge_done:
     li s5, 0
 
 print_loop:
-    bge s5, s0, print_done
+    bge  s5, s0, print_done
     slli t0, s5, 2
-    add t0, s2, t0
-    lw a1, 0(t0)                        # a1 = result[i]
-    la a0, intstr
-    call printf                         # printf("%d ", result[i])
+    add  t0, s2, t0
+    lw   a1, 0(t0)                      # a1 = result[i]
+    la   a0, intstr
+    call printf                         # printf("%d", result[i])
     addi s5, s5, 1
-    j print_loop
+    bge  s5, s0, print_done             # skip space if last element
+    la   a0, sepstr
+    call printf                         # printf(" ")
+    j    print_loop
 
 print_done:
     la a0, newline
